@@ -11,6 +11,7 @@ function App() {
   const [currentAnswer, setAnswer] = useState('');
   const [answers, setAnswers] = useState([]);
   const [error, setError] = useState('');
+  const [showResults, setResults] = useState(false);
   const questions = [
     {
       id: 1,
@@ -118,6 +119,32 @@ function App() {
     return <div className="error">{error}</div>
   };
 
+  const renderUserAnswer = (question, answer) => {
+    if(question.correct_answer === answer.answer) {
+      return <span className="correct">Correct</span>;
+    }
+    return <span className="failed">Failed</span>
+  };
+  
+
+  const renderResultData = () => {
+    return answers.map(answer => {
+      const question = questions.find(question => question.id === answer.questionId);
+      return (
+        <div key={question.id}>
+          {question.question} - {renderUserAnswer(question, answer)}
+        </div>
+      );
+    });
+  };
+
+  const restart = () => {
+    setAnswers([]);
+    setAnswer('');
+    setCurrentQuestion(0);
+    setResults(false);
+  }
+
   const next = () => {
     const answer = {questionId: question.id, answer: currentAnswer};
     if(!currentAnswer) {
@@ -132,29 +159,41 @@ function App() {
       setCurrentQuestion(currentQuestion + 1);
       return;
     }
+   
+    setResults(true);
   }
 
-  return (
-    <div className="main-container">
-      <h1>React quiz</h1>
-      <Progress 
-          total={questions.length} 
-          currentQuestion={currentQuestion +1}  
-      />
-      <Question 
-           question={question.question}
-      />
-          {renderError()}
-      <Answers 
-          question={question} 
-          currentAnswer={currentAnswer} 
-          handleClick={handleClick}
-      />
-      <button className="btn btn-primary" 
-          onClick={next}>Confirm and continue
-      </button> 
-    </div>
-  );
+  if(showResults) {
+    return(
+      <div className="container results">
+        <h2>Result:</h2>
+        <ul>{renderResultData()}</ul>
+        <button className="btn btn-primary" onClick={restart}>Restart</button>
+      </div>
+    );
+  } else {
+    return (
+      <div className="main-container">
+        <h1>React quiz</h1>
+        <Progress 
+            total={questions.length} 
+            currentQuestion={currentQuestion +1}  
+        />
+        <Question 
+            question={question.question}
+        />
+            {renderError()}
+        <Answers 
+            question={question} 
+            currentAnswer={currentAnswer} 
+            handleClick={handleClick}
+        />
+        <button className="btn btn-primary" 
+            onClick={next}>Confirm and continue
+        </button> 
+      </div>
+    );
+  }
 }
 
 export default App;
