@@ -9,6 +9,8 @@ function App() {
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [currentAnswer, setAnswer] = useState('');
+  const [answers, setAnswers] = useState([]);
+  const [error, setError] = useState('');
   const questions = [
     {
       id: 1,
@@ -106,16 +108,51 @@ function App() {
 
   const handleClick = e => {
     setAnswer(e.target.value);
-    console.log(e.target.value)
+    setError('');
   };
+
+  const renderError = () => {
+    if(!error) {
+      return;
+    }
+    return <div className="error">{error}</div>
+  };
+
+  const next = () => {
+    const answer = {questionId: question.id, answer: currentAnswer};
+    if(!currentAnswer) {
+      setError('Please select one option');
+      return;
+    }
+    answers.push(answer);
+    setAnswers(answers);
+    setAnswer('');
+
+    if(currentQuestion + 1 < questions.length) {
+      setCurrentQuestion(currentQuestion + 1);
+      return;
+    }
+  }
 
   return (
     <div className="main-container">
       <h1>React quiz</h1>
-      <Progress total="10" currentQuestion="1" />
-      <Question question={question.question}/>
-      <Answers question={question} currentAnswer={currentAnswer} handleClick={handleClick}/>
-      <button className="btn btn-primary">Confirm and continue</button> 
+      <Progress 
+          total={questions.length} 
+          currentQuestion={currentQuestion +1}  
+      />
+      <Question 
+           question={question.question}
+      />
+          {renderError()}
+      <Answers 
+          question={question} 
+          currentAnswer={currentAnswer} 
+          handleClick={handleClick}
+      />
+      <button className="btn btn-primary" 
+          onClick={next}>Confirm and continue
+      </button> 
     </div>
   );
 }
