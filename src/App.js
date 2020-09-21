@@ -64,8 +64,8 @@ function App() {
       answer_a: 'Keys',
       answer_b: 'Components',
       answer_c: 'Ref',
-      answer_d: 'Href',
-      correct_answer: 'a',
+      answer_d: 'props',
+      correct_answer: 'd',
     },
     {
       id: 7,
@@ -101,7 +101,7 @@ function App() {
       answer_b: 'props',
       answer_c: 'fetch',
       answer_d: 'render with arguments',
-      correct_answer: 'd',
+      correct_answer: 'b',
     },
   ];
 
